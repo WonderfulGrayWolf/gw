@@ -1,0 +1,40 @@
+'''
+官方文档
+https://docs.python.org/zh-cn/3/library/unittest.html
+'''
+# 定义测试类
+class TestDemo(unittest.TestCase):
+    @classmethod
+    def setupClass(cls):  # fixtrue初始化配置
+        print('test begin')
+    @classmethod
+    def teardownClass(cls):  # 结束测试类
+        print('test over')
+    def setup(self):   # 每个测试用例执行前操作
+        print('case1 begin')
+    def teardown(self):   # 每个测试用例执行后操作
+        print('case1 over')
+    def test_one(self):  # 定义一个测试用例
+        self.assertEqual(1, 1, '1==1')
+
+# 加载并执行测试用例
+def load_tests(dir_path, pattern):
+    '''
+    dir_path: 测试用例目录
+    pattern: 匹配路径下的py问卷
+    '''
+    package_tests = unittest.defaultTestLoader.discover(start_dir=path, pattern=pattern)  # 定位测试集
+    return package_tests
+
+# 运行并输出输出测试报告
+def runAutomation(testCaseDir, pattern, reportDir, title=u'用例标题', description='用例描述'):
+    #set cases
+    cases = load_tests(testCaseDir, pattern)
+    # setting report fileName
+    fileName = "parameterTest_%s.html" % now
+    # setting report dir
+    with open(os.path.join(reportDir, fileName), 'wb') as fp:
+        runner = HTMLTestReportEN.HTMLTestRunner(stream=fp, title, description)  # 加载测试集和输出目标
+        runner.run(cases)  # 运行测试用例
+
+

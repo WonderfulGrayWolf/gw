@@ -1,0 +1,47 @@
+安装第三方库 allure-pytest
+运行：
+在测试执行期间收集结果
+    pytest testfile -s -q --alluredir=targetpath (--alluredir 指定存储测试结果的路径)
+查看测试报告
+    1.测试完成后查看实际报告，在线看报告并展示，不会存储测试报告
+    allure serve 测试结果文件
+    2.从结果生成一个报告，会启动一个tomcat服务，分为两个步骤：
+        1>生成报告
+            allure generate 测试结果文件 -o 存储路径 --clean （覆盖路径需要加--clean，否则会冲突）
+        2>打开报告
+            allure open -h 127.0.0.1 -p 8883 存储路径
+
+定义场景注解
+作用：在测试报告中查看测试功能，子功能或场景、步骤,采用装饰器的方式
+场景步骤附件：
+    @allue.feature('功能名称')  体现在报告中的behaviore中
+    @allue.story('测试用例')    报告在features显示
+    @allure.step('测试步骤细节')
+        1.运行指定模块或指定用例
+        pytest filepath --allure-features 'feature注解' （--allure_stories '用例名称注解'）
+关联测试用例地址:
+@allure.link(link,name)
+关联测试bug,需要先定义基础链接({}标示bug标号),然后通过issue装饰器指定bug编号
+--allure-link-pattern=issue:link{}
+@allure.issue('issueNo',name)
+
+执行一定测试范围内的用例,用于冒烟测试、上线测试
+方案：
+1.pytest.mark
+2.allure.features,allure.stories
+3.allure.severity 标记用例重要程度
+用法：
+    1.在方法、函数或类上加@allure.severity(allure.severity_level.级别)
+        级别包括：
+                1.BLOCKER 阻塞
+                2.CRITICAL 严重
+                3.NORMAL 普通
+                4.MINOR 次要
+                5.TRIVIAL 轻微
+    2.执行时标记用例等级
+    pytest -s -v filepath --allure-severities blocker,critical
+    例如：pytest test/test_app1/test_* --allure-severities blocker --alluredir=test/test_report/result3
+
+在测试报告中添加附件，截图等附加信息
+    @allure.attach('附加信息（可以是数据、文本、网页）', name, allure.attachment_type.TEXT(HTMl))
+    @allure.attac.file('path', name, allure.attachment_type.JGP)
