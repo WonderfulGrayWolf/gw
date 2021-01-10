@@ -1,0 +1,65 @@
+一、app自动化测试用例的重要部分
+1.导入依赖
+from appium import webdriver
+2.capailities设置
+android：
+desired_caps={
+  "platformName": "android",  # 操作系统
+  "platformVersion": "9.0",  # 系统版本
+  "automationName": 'XCUITest' for ios,  'uiautomator2' for android with default
+  "deviceName": "emulator-5554",  # 设备名 adb devices
+  "appActivity": ".view.WelcomeActivityAlias",  # app页面  adb logcat | grep -i displayed
+  "appPackage": "com.xueqiu.android",  # app包名
+  "app": path , # 包路径，安装到设备上的应用
+}
+ios:
+{
+    "platformName": "iOS",
+    "platformVersion": "11.0",
+    "deviceName": "iPhone 7",
+    "bundleId": io.appium.TestAPP  # ios包
+    "automationName": "XCUITest",
+    "app": "/path/to/my.app"
+}
+通用：
+	"noReset": 'true' ,  # 不清除缓存和设置
+    "browserName": 'Safari' for iOS and 'Chrome', 'Chromium', or 'Browser' for Android  # web浏览器
+    "dontStopAppOnReset": 'true'  # 首次启动的时候不重启app，方便连续测试
+    "skipDeviceInitialization": 'true'  # 跳过安装，权限设置等操作
+官方文档：Desired Capabilities Documentation
+获取app信息
+app信息
+    获取当前界面元素：adb shell dumpsys activity top
+app入口
+    adb logcat | grep -i displayed
+启动应用
+    adb shell am start -W -n app包名/页面名 -S
+3. 初始化driver
+driver=webdriver.Remote('http://localhost:4723/wd/hub',desired_caps)
+4. 隐式等待，增强用例稳定性
+driver.implicitly_wait(10)
+5. 元素定位与操作
+find + action
+6. 断言
+assert
+二、元素定位
+id
+driver.find_element_by_id(resource-id)
+driver.find_element_by_accessibility_id(content-desc)
+xpath
+driver.find_element_by_xpath(xpath)
+官网文档： w3school.com.cn/xpath/xpath_syntax.asp
+uiautomator
+官方文档：https://developer.android.com/reference/android/support/test/uiautomator/UiSelector.html
+uiautomator是android的工作引擎，速度快  相当于css定位
+driver.find_element_by_android_uiautomator(表达式).click()
+通过id：new UiSelector().resourceId(resource-id)
+通过class：new UiSelector().className(className)
+组合：new UiSelector().resourceId(resource-id).text('文本').className('className')
+通过文本： new UiSelector().textContaons('包含text文本')
+滚动查找元素：new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().textContaons('文本').instance(0));
+三、等待
+强制等待：sleep() # 在对应位置固定等待，局部
+隐式等待：driver.implicitly_wait(10)  # 在服务端等待元素出现，全局
+显示等待：WebDriverWati(driver,time,step).until(type(model,location))  # 在客户端等待元素出现，局部
+

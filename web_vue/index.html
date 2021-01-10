@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    {{msg}}
+    <div v-if="show">展示</div>
+    <!--v-if为false在dom中不显示-->
+    <div v-else>不展示（在dom中不可见）</div>
+    <div v-show="show">在dom中可见</div>  <!--在dom中展示-->
+    <!-- v-for循环数组，v 代表元素值，i代表下标 -->
+    <p v-for="(v,i) in arr">循环数组：{{v}}--{{i}}</p>
+    <!-- v-for打印字典对象，第一位代表元素值，第二位代表key值，第三位代表下标 -->
+    <p v-for="(v,k,i) in obj">遍历字典对象：{{v}}--{{k}}--{{i}}</p>
+    <p v-for="(v,i) in objarr">编辑数组字典对象：{{v}} &ensp; 字典下标：{{i}} &ensp; 姓名：{{v.name}}</p>
+    <!--v-on(@) 绑定事件，在vue对象的methods中编写对应函数-->
+    <button v-on:click="add()">count加1</button>
+    <div>{{count}}</div>
+    <!--v-bind(:) 绑定属性，在vue对象的data中动态改变元素属性-->
+    <div style="width: 100px;height: 100px;" v-bind:style="bgcolor"></div>
+    <!--v-model 绑定数据，既可以通过数据更改页面内容，也可以读取页面上的内容，获取页面上的数据-->
+    <input type="text" v-model="text">
+    <button @click="showText()">打印文本</button>
+</div>
+<script src="vue.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            msg: "hello world",
+            show: false,
+            arr: ["one", "two", "three"],
+            obj: {
+                name: 'test',
+                age: '18',
+                gender: "男"
+            },
+            objarr: [
+                {
+                    name: 'test1',
+                    age: '18',
+                    gender: "男"
+                }, {
+                    name: 'test2',
+                    age: '18',
+                    gender: "男"
+                }, {
+                    name: 'test3',
+                    age: '18',
+                    gender: "男"
+                }
+            ],
+            count: 1,
+            bgcolor: {
+                backgroundColor: 'red'
+            },
+            text: "123"
+        },
+        methods: {
+            add() {
+                this.count++
+            },
+            showText(){
+                console.log(this.text)
+            }
+        }
+    })
+</script>
+</body>
+</html>
